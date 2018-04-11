@@ -41,18 +41,20 @@ let func_pattern  = name_pattern . '\s*(' . args_pattern . '\s*)'
 function! DSurroundFunc()
     call s:findFunc ('vbc')
     normal ddsb
-endfu
+endfunction
 " Change surrounding function call
 function! CSurroundFunc ()
     let saved_cursor = getcurpos()
-    call s:findFunc ('vbc') | redraw
-    let char = s:getChar('Change surrounding func with: ')
-    if char != "\<Esc>"
-        call feedkeys('dcsb' . char, '')
+    let char = input('Change surrounding func with: ')
+    if (len(char) > 0)
+        " call feedkeys('%Bct(', '')
+        normal mx%Bdt(
+        exe ":normal i" . char
+        call s:reset(saved_cursor)
     else
         call s:reset(saved_cursor)
     end
-endfu
+endfunction
 
 
 " Helpers
@@ -78,7 +80,7 @@ function! s:findFunc (flags, ...)
     else
         return searchpos(pattern, fc . fb . fn)
     end
-endfu
+endfunction
 function! s:visualFunc(...)
     let which = get(a:, 1, 'c')
     let pattern = g:fcall_pattern
@@ -104,7 +106,7 @@ function! s:visualFunc(...)
         call s:findFunc ('vb', pattern) | end
 
     return
-endfu
+endfunction
 function! s:changeFunc(...)
     let which = get(a:, 1, 'c')
 
@@ -134,7 +136,7 @@ function! s:changeFunc(...)
         call feedkeys('c', '') | end
 
     return ''
-endfu
+endfunction
 function! s:getChar(message)
     call s:echonHL('Question', a:message)
     let c = getchar()
@@ -142,13 +144,13 @@ function! s:getChar(message)
         let c = nr2char(c)
     end
     return c
-endfu
+endfunction
 function! s:reset(position)
     exe 'normal! ' . "\<Esc>"
     call setpos('.', a:position)
-endfu
+endfunction
 function! s:echonHL(hlgroup, ...)
     exe ':echohl ' . a:hlgroup
     echon join(a:000)
     echohl None
-endfu
+endfunction
