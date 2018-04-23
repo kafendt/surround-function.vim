@@ -48,7 +48,7 @@ function! CSurroundFunc ()
     let char = input('Change surrounding func with: ')
     if (len(char) > 0)
         " call feedkeys('%Bct(', '')
-        normal mx%Bdt(
+        normal mx[(hdiw
         exe ":normal i" . char
         call s:reset(saved_cursor)
     else
